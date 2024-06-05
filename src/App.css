@@ -17,6 +17,10 @@
 .app-main {
 	padding: 0 25px;
 }
+.app-message {
+	font-size: 25px;
+	font-weight: 500;
+}
 .app-title {
 	font-size: 40px;
 	font-weight: 900;

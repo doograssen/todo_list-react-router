@@ -1,48 +1,24 @@
 import './App.css';
-import { Task } from './components/Task/Task';
-import { TaskForm } from './components/TaskForm/TaskForm';
-import { Header } from './components/Header/Header';
-import { useStore } from './hooks/useStore';
+import { useRoutes, Navigate } from 'react-router-dom';
+import { MainPage } from './components/pages/MainPage';
+import { LoadError } from './components/pages/LoadError';
+import { TaskPage } from './components/pages/TaskPage';
 
 export const App = () => {
-	const {form, events, getLoader, getStatus, setStatus, getList, setNewItem} = useStore();
+	const routes = useRoutes([
+		{ path: '/', element: <MainPage/> },
+		{ path: '/task/:id', element: <TaskPage/>},
+		{ path: "/404", element: <LoadError message="This page doesn't exist in this version of the universe"/> },
+		{ path: "*", element: <Navigate to="/404" /> },
+		{ path: "/task-load-error", element: <LoadError message="Task could not be loaded"/> },
+		{ path: "/task-not-exist", element: <LoadError message="Task not found" /> },
+	]);
 
 	return (
 		<div className="app">
 			<main className="app-main">
-				<h1 className="app-title">ToDo List (JSON Server)</h1>
-				<div className="app-container">
-					<TaskForm
-						data={form.getData()}
-						setData={form.setData}
-						add={events.add}
-						search={events.search}
-					/>
-					<div className={`app-content ${getLoader() ? 'app-content--update' : ''}`}>
-						<Header
-							searchState={getStatus('search')}
-							setSearchState={setStatus('search')}
-							sortStatus={getStatus('sort')}
-							setSortStatus={setStatus('sort')}
-						/>
-						{getLoader() && (
-							<div className="loader"></div>
-						) }
-							<ul className="app-list">
-								{getList().map(({ id, text }) => (
-									<Task
-										key={'task-' + id}
-										id={id}
-										text={text}
-										onDelete={events.delete}
-										setNewData={setNewItem}
-										needUpdate={getStatus('update')}
-										setNeedUpdate={setStatus('update')}
-									/>
-								))}
-							</ul>
-					</div>
-				</div>
+				<h1 className="app-title">ToDo List (React Router)</h1>
+				{routes}
 			</main>
 		</div>
 	);
